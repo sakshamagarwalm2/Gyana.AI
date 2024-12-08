@@ -61,7 +61,7 @@ function ChatPage() {
   };
 
   return (
-    <div className="flex relative z-50 flex-col p-5 min-h-screen md:p-10 bg-black/20">
+    <div className="flex relative z-30 flex-col p-5 min-h-screen md:p-10 bg-black/20">
       {/* Header */}
       <div 
         data-augmented-ui="tl-clip br-clip both"
@@ -72,14 +72,14 @@ function ChatPage() {
           <button
             onClick={handleClear}
             data-augmented-ui="tl-clip br-clip both"
-            className="p-2 text-red-500 transition-colors bg-red-500/20 hover:bg-red-500/30"
+            className="p-3 text-red-500 transition-colors bg-red-500/20 hover:bg-red-500/30"
           >
             <Trash2 size={20} />
           </button>
           <button
             onClick={handleLogout}
             data-augmented-ui="tl-clip br-clip both"
-            className="p-2 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"
+            className="p-3 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"
           >
             <LogOut size={20} />
           </button>
@@ -116,7 +116,7 @@ function ChatPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter your message..."
-            className="flex-1 p-2 text-cyan-500 border-cyan-500 bg-black/50"
+            className="flex-1 p-4 text-cyan-500 border-cyan-500 bg-black/50"
             data-augmented-ui="tl-clip br-clip both"
           />
           <button

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRive } from '@rive-app/react-canvas';
 import { Howl } from 'howler';
 import { useAuthStore } from '../stores/authStore';
+import Header from '../components/header';
 
 const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'] });
 const successSound = new Howl({ src: ['https://assets.codepen.io/154874/success.mp3'] });
@@ -46,12 +47,6 @@ function LoginPage() {
         return;
       }
 
-      if (password !== confirmPassword) {
-        errorSound.play();
-        setError('PASSWORDS DO NOT MATCH');
-        return;
-      }
-
       // Assuming register returns true if successful
       if (register(username, email, password)) {
         successSound.play();
@@ -75,9 +70,10 @@ function LoginPage() {
 
   return (
     <div className="flex relative z-50 justify-center items-center p-10 min-h-screen bg-black/20">
+      <Header/>
       <div 
         data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"
-        className="p-8 w-96 border-cyan-500 bg-black/80"
+        className="p-8 w-auto border-cyan-500 bg-black/80"
       >
         <div className="mb-8 h-32">
           <RiveComponent />
@@ -92,7 +88,7 @@ function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="USERNAME"
-              className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
+              className="p-3 w-full text-cyan-500 border-cyan-500 bg-black/50"
               data-augmented-ui="tl-clip br-clip both"
             />
           </div>
@@ -104,7 +100,7 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="EMAIL"
-                className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
+                className="p-3 w-full text-cyan-500 border-cyan-500 bg-black/50"
                 data-augmented-ui="tl-clip br-clip both"
               />
             </div>
@@ -116,23 +112,11 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="PASSWORD"
-              className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
+              className="p-3 w-full text-cyan-500 border-cyan-500 bg-black/50"
               data-augmented-ui="tl-clip br-clip both"
             />
           </div>
           
-          {!isLogin && (
-            <div>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="CONFIRM PASSWORD"
-                className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
-                data-augmented-ui="tl-clip br-clip both"
-              />
-            </div>
-          )}
           
           {error && (
             <div className="text-sm text-red-500">{error}</div>

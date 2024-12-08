@@ -10,6 +10,8 @@ import ChatPage from './pages/ChatPage';
 import { useAuthStore } from './stores/authStore';
 import BG_IMG from './public/pixelcut-export.png';
 
+// import Header from './components/header';
+
 // UI Sound Effects
 const uiSounds = {
   hover: new Howl({ src: ['https://assets.codepen.io/154874/hover.mp3'] }),
@@ -41,7 +43,7 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-black" style={{
+      <div className="overflow-hidden min-h-screen bg-black" style={{
         backgroundImage: `url(${BG_IMG})`, backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat'
       }}>
@@ -50,6 +52,7 @@ function App() {
           lineWidth={2}
           className="fixed z-10"
         />
+        
         <Animator>
           <Routes>
             <Route path="/" element={<HomePage />} />
