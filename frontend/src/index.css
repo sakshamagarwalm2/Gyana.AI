@@ -1,16 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,body{
+:root {
+  color-scheme: dark;
+}
+
+body {
   margin: 0;
-  padding: 0;
-  text-decoration: none;
-  font-family: "Orbitron";
-  width: 100%;
-  height: 100%;
-  background-color: bisque;
-  color: black;
+  font-family: 'Orbitron', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000;
+  color: #00ffff;
+}
+
+[data-augmented-ui] {
+  --aug-border-all: 1px;
+  --aug-border-bg: #00ffff;
+  --aug-inlay-all: 1px;
+  --aug-inlay-bg: rgba(0, 255, 255, 0.1);
+}
+
+input {
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffff33;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffff66;
 }
