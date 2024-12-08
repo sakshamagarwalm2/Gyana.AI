@@ -12,7 +12,6 @@ function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
@@ -64,7 +63,6 @@ function LoginPage() {
     // Reset form fields when switching modes
     setUsername('');
     setPassword('');
-    setConfirmPassword('');
     setEmail('');
   };
 
