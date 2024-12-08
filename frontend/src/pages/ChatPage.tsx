@@ -61,25 +61,25 @@ function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black/90 flex flex-col">
+    <div className="flex flex-col p-5 min-h-screen md:p-10 bg-black/20">
       {/* Header */}
       <div 
         data-augmented-ui="tl-clip br-clip both"
-        className="bg-black/80 border-cyan-500 p-4 flex justify-between items-center"
+        className="flex justify-between items-center p-4 border-cyan-500 bg-black/80"
       >
-        <h1 className="text-cyan-500 text-xl">NEURAL LINK TERMINAL</h1>
+        <h1 className="text-xl text-cyan-500">Gyana.AI</h1>
         <div className="flex space-x-4">
           <button
             onClick={handleClear}
             data-augmented-ui="tl-clip br-clip both"
-            className="p-2 bg-red-500/20 text-red-500 hover:bg-red-500/30 transition-colors"
+            className="p-2 text-red-500 transition-colors bg-red-500/20 hover:bg-red-500/30"
           >
             <Trash2 size={20} />
           </button>
           <button
             onClick={handleLogout}
             data-augmented-ui="tl-clip br-clip both"
-            className="p-2 bg-cyan-500/20 text-cyan-500 hover:bg-cyan-500/30 transition-colors"
+            className="p-2 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"
           >
             <LogOut size={20} />
           </button>
@@ -87,7 +87,7 @@ function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="overflow-y-auto flex-1 p-4 space-y-4">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -116,13 +116,13 @@ function ChatPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter your message..."
-            className="flex-1 bg-black/50 border-cyan-500 text-cyan-500 p-2"
+            className="flex-1 p-2 text-cyan-500 border-cyan-500 bg-black/50"
             data-augmented-ui="tl-clip br-clip both"
           />
           <button
             type="submit"
             data-augmented-ui="tl-clip br-clip both"
-            className="p-2 bg-cyan-500/20 text-cyan-500 hover:bg-cyan-500/30 transition-colors"
+            className="p-2 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"
           >
             <Send size={20} />
           </button>

@@ -8,11 +8,16 @@ const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'
 const successSound = new Howl({ src: ['https://assets.codepen.io/154874/success.mp3'] });
 
 function LoginPage() {
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+
   const navigate = useNavigate();
   const login = useAuthStore(state => state.login);
+  const register: any = useAuthStore(state => state.register);
 
   const { RiveComponent } = useRive({
     src: 'https://cdn.rive.app/animations/vehicles.riv',
@@ -22,25 +27,64 @@ function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(username, password)) {
-      successSound.play();
-      navigate('/chat');
+    setError('');
+
+    if (isLogin) {
+      // Login logic
+      if (login(username, password)) {
+        successSound.play();
+        navigate('/chat');
+      } else {
+        errorSound.play();
+        setError('ACCESS DENIED: Invalid credentials');
+      }
     } else {
-      errorSound.play();
-      setError('ACCESS DENIED: Invalid credentials');
+      // Sign up logic
+      if (!username || !email || !password) {
+        errorSound.play();
+        setError('ALL FIELDS ARE REQUIRED');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorSound.play();
+        setError('PASSWORDS DO NOT MATCH');
+        return;
+      }
+
+      // Assuming register returns true if successful
+      if (register(username, email, password)) {
+        successSound.play();
+        navigate('/chat');
+      } else {
+        errorSound.play();
+        setError('REGISTRATION FAILED');
+      }
     }
   };
 
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setError('');
+    // Reset form fields when switching modes
+    setUsername('');
+    setPassword('');
+    setConfirmPassword('');
+    setEmail('');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black/90">
+    <div className="flex justify-center items-center p-10 min-h-screen bg-black/20">
       <div 
         data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"
-        className="w-96 p-8 bg-black/80 border-cyan-500"
+        className="p-8 w-96 border-cyan-500 bg-black/80"
       >
-        <div className="h-32 mb-8">
+        <div className="mb-8 h-32">
           <RiveComponent />
         </div>
-        <h2 className="text-2xl text-cyan-500 mb-6">SYSTEM LOGIN</h2>
+        <h2 className="mb-6 text-2xl text-cyan-500">
+          {isLogin ? 'SYSTEM LOGIN' : 'SYSTEM REGISTRATION'}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -48,30 +92,71 @@ function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="USERNAME"
-              className="w-full bg-black/50 border-cyan-500 text-cyan-500 p-2"
+              className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
               data-augmented-ui="tl-clip br-clip both"
             />
           </div>
+          
+          {!isLogin && (
+            <div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="EMAIL"
+                className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
+                data-augmented-ui="tl-clip br-clip both"
+              />
+            </div>
+          )}
+          
           <div>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="PASSWORD"
-              className="w-full bg-black/50 border-cyan-500 text-cyan-500 p-2"
+              className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
               data-augmented-ui="tl-clip br-clip both"
             />
           </div>
-          {error && (
-            <div className="text-red-500 text-sm">{error}</div>
+          
+          {!isLogin && (
+            <div>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="CONFIRM PASSWORD"
+                className="p-2 w-full text-cyan-500 border-cyan-500 bg-black/50"
+                data-augmented-ui="tl-clip br-clip both"
+              />
+            </div>
           )}
+          
+          {error && (
+            <div className="text-sm text-red-500">{error}</div>
+          )}
+          
           <button
             type="submit"
             data-augmented-ui="tl-clip br-clip both"
-            className="w-full py-2 bg-cyan-500/20 text-cyan-500 hover:bg-cyan-500/30 transition-colors"
+            className="py-2 w-full text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"
           >
-            AUTHENTICATE
+            {isLogin ? 'AUTHENTICATE' : 'REGISTER'}
           </button>
+          
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="text-cyan-500 hover:underline"
+            >
+              {isLogin 
+                ? 'Need an account? SIGN UP' 
+                : 'Already have an account? LOGIN'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

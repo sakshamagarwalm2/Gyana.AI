@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ChatPage from './pages/ChatPage';
 import { useAuthStore } from './stores/authStore';
+import BG_IMG from '../public/pixelcut-export.png';
 
 // UI Sound Effects
 const uiSounds = {
@@ -23,7 +24,7 @@ function App() {
   useEffect(() => {
     // Play startup sound
     uiSounds.startup.play();
-    
+
     // Simulate loading
     setTimeout(() => setIsLoading(false), 2000);
   }, []);
@@ -40,21 +41,25 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-black" style={{
+        backgroundImage: `url(${BG_IMG})`, backgroundSize: 'cover',
+        // backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <GridLines
           lineColor="rgba(0, 255, 255, 0.1)"
-          lineWidth={1}
-          position="absolute"
+          lineWidth={2}
+          className="fixed initial-0"
         />
         <Animator>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route 
-              path="/chat" 
+            <Route
+              path="/chat"
               element={
                 isAuthenticated ? <ChatPage /> : <Navigate to="/login" />
-              } 
+              }
             />
           </Routes>
         </Animator>

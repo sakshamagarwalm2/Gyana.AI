@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import  { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import GLOBE from 'vanta/dist/vanta.globe.min';
 import { Howl } from 'howler';
@@ -19,9 +19,9 @@ function HomePage() {
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.00,
-        scaleMobile: 1.00,
+        scaleMobile: 0.70,
         color: 0x00ffff,
-        backgroundColor: 0x000000
+        backgroundColor: 0x0
       });
     }
 
@@ -36,7 +36,7 @@ function HomePage() {
         data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"
         className="p-12 bg-black/80 border-cyan-500 text-center"
       >
-        <h1 className="text-5xl font-bold text-cyan-500 mb-8">NEURAL LINK</h1>
+        <h1 className="text-5xl font-bold text-cyan-500 mb-8">Gyana.AI</h1>
         <p className="text-cyan-300 mb-8">Advanced AI Communication Interface</p>
         <div className="space-x-4">
           <Link
