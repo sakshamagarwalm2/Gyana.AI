@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import GLOBE from 'vanta/dist/vanta.globe.min';
 import { Howl } from 'howler';
