@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ChatPage from './pages/ChatPage';
 import { useAuthStore } from './stores/authStore';
-import BG_IMG from '../public/pixelcut-export.png';
+import BG_IMG from './public/pixelcut-export.png';
 
 // UI Sound Effects
 const uiSounds = {
@@ -31,9 +31,9 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="flex justify-center items-center min-h-screen bg-black">
         <div data-augmented-ui="tl-clip tr-clip br-clip bl-clip both" className="p-8 bg-black border-cyan-500">
-          <h1 className="text-cyan-500 text-2xl">SYSTEM INITIALIZING...</h1>
+          <h1 className="text-2xl text-cyan-500">SYSTEM INITIALIZING...</h1>
         </div>
       </div>
     );
@@ -43,13 +43,12 @@ function App() {
     <Router>
       <div className="min-h-screen bg-black" style={{
         backgroundImage: `url(${BG_IMG})`, backgroundSize: 'cover',
-        // backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       }}>
         <GridLines
           lineColor="rgba(0, 255, 255, 0.1)"
           lineWidth={2}
-          className="fixed initial-0"
+          className="fixed z-10"
         />
         <Animator>
           <Routes>

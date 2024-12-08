@@ -74,7 +74,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center p-10 min-h-screen bg-black/20">
+    <div className="flex relative z-50 justify-center items-center p-10 min-h-screen bg-black/20">
       <div 
         data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"
         className="p-8 w-96 border-cyan-500 bg-black/80"

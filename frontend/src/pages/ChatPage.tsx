@@ -61,7 +61,7 @@ function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col p-5 min-h-screen md:p-10 bg-black/20">
+    <div className="flex relative z-50 flex-col p-5 min-h-screen md:p-10 bg-black/20">
       {/* Header */}
       <div 
         data-augmented-ui="tl-clip br-clip both"
