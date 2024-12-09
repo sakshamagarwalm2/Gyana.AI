@@ -8,6 +8,7 @@ export const api = {
       email,
       password
     });
+    // console.log(response)
     return response.data;
   },
 
@@ -17,6 +18,7 @@ export const api = {
       email,
       password
     });
+    console.log(response)
     return response.data;
   },
 

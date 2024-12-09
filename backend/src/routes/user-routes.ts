@@ -1,15 +1,24 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:827042568.
-import express from 'express';
-import { UserLogin, UserSignup, getAllUsers } from '../controllers/user-controllers.js';
-import { loginValidator, signupValidator, validate } from '../utils/validators.js';
+import { Router } from "express";
+import {
+  getAllUsers,
+  userLogin,
+  userLogout,
+  userSignup,
+  verifyUser,
+} from "../controllers/user-controllers.js";
+import {
+  loginValidator,
+  signupValidator,
+  validate,
+} from "../utils/validators.js";
+import { verifyToken } from "../utils/token-manager.js";
 
+const userRoutes = Router();
 
-const userrouter = express.Router();
+userRoutes.get("/", getAllUsers);
+userRoutes.post("/signup", validate(signupValidator), userSignup);
+userRoutes.post("/login", validate(loginValidator), userLogin);
+userRoutes.get("/auth-status", verifyToken, verifyUser);
+userRoutes.get("/logout", verifyToken, userLogout);
 
-userrouter.get("/", getAllUsers);
-userrouter.post("/signup",validate(signupValidator),UserSignup);
-userrouter.post("/login",validate(loginValidator),UserLogin);
-
-
-export default userrouter;
-
+export default userRoutes;

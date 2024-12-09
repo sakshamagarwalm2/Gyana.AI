@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         return true;
        }
       const response = await api.login(email, password);
-      if (response.success) {
+      if (response) {
         set({ 
           isAuthenticated: true, 
           userId: response.userId,
@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (name, email, password) => {
     try {
       const response = await api.register(name, email, password);
-      if (response.success) {
+      if (response) {
         set({ 
           isAuthenticated: true, 
           userId: response.userId,
