@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Howl } from 'howler';
 import { useAuthStore } from '../stores/authStore';
 import { Trash2, Send, LogOut } from 'lucide-react';
+import { api } from '../services/api';
+import { DEFAULT_MESSAGES, getErrorMessage } from '../utils/errorMessages';
 
 const messageSound = new Howl({ src: ['https://assets.codepen.io/154874/message.mp3'] });
+const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'] });
 
 interface Message {
   id: number;
@@ -15,51 +18,112 @@ interface Message {
 function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const logout = useAuthStore(state => state.logout);
+  const { userId, logout } = useAuthStore();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    loadChatHistory();
+  }, []);
+
   useEffect(scrollToBottom, [messages]);
+
+  const loadChatHistory = async () => {
+    if (!userId) return;
+
+    try {
+      const response = await api.getChatHistory(userId);
+      if (response.success) {
+        setMessages(response.history.map((msg: any, index: number) => ({
+          id: index,
+          text: msg.text,
+          sender: msg.sender
+        })));
+      }
+    } catch (error) {
+      errorSound.play();
+      const userMessage: Message = {
+        id: Date.now(),
+        text: DEFAULT_MESSAGES.CHAT_HISTORY_ERROR,
+        sender: 'ai'
+      };
+      setMessages([userMessage]);
+    }
+  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || !userId) return;
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now(),
       text: input,
       sender: 'user'
     };
+
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     messageSound.play();
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
+    try {
+      const response = await api.sendMessage(userId, input);
+      if (response.success) {
+        const aiMessage: Message = {
+          id: Date.now() + 1,
+          text: response.message,
+          sender: 'ai'
+        };
+        setMessages(prev => [...prev, aiMessage]);
+        messageSound.play();
+      } else {
+        throw new Error(response.error || DEFAULT_MESSAGES.AI_ERROR);
+      }
+    } catch (error) {
+      errorSound.play();
+      const errorMessage: Message = {
         id: Date.now() + 1,
-        text: "I am an AI assistant. How can I help you today?",
+        text: getErrorMessage(error),
         sender: 'ai'
       };
-      setMessages(prev => [...prev, aiMessage]);
-      messageSound.play();
-    }, 1000);
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleClear = () => {
-    setMessages([]);
+  const handleClear = async () => {
+    if (!userId) return;
+
+    try {
+      const response = await api.clearChatHistory(userId);
+      if (response.success) {
+        setMessages([]);
+        messageSound.play();
+      } else {
+        throw new Error(DEFAULT_MESSAGES.CLEAR_HISTORY_ERROR);
+      }
+    } catch (error) {
+      errorSound.play();
+      const errorMessage: Message = {
+        id: Date.now(),
+        text: getErrorMessage(error),
+        sender: 'ai'
+      };
+      setMessages([errorMessage]);
+    }
   };
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
-
+    
   return (
     <div className="flex relative z-30 flex-col p-5 min-h-screen md:p-10 bg-black/20">
       {/* Header */}

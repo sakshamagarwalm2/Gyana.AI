@@ -1,19 +1,61 @@
 import create from 'zustand';
+import { api } from '../services/api';
 
 interface AuthState {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
+  userId: string | null;
+  name: string | null;
+  email: string | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
-  login: (username, password) => {
-    if (username === '1234' && password === '1234') {
-      set({ isAuthenticated: true });
-      return true;
+  userId: null,
+  name: null,
+  email: null,
+  login: async (email, password) => {
+    try {
+      const response = await api.login(email, password);
+      if (response.success) {
+        set({ 
+          isAuthenticated: true, 
+          userId: response.userId,
+          name: response.name,
+          email: response.email
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   },
-  logout: () => set({ isAuthenticated: false }),
+  register: async (name, email, password) => {
+    try {
+      const response = await api.register(name, email, password);
+      if (response.success) {
+        set({ 
+          isAuthenticated: true, 
+          userId: response.userId,
+          name: response.name,
+          email: response.email
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Registration error:', error);
+      return false;
+    }
+  },
+  logout: () => set({ 
+    isAuthenticated: false, 
+    userId: null,
+    name: null,
+    email: null
+  }),
 }));
