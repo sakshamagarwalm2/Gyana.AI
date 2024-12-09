@@ -33,9 +33,6 @@ function LoginPage() {
       let success;
       if (isLogin) {
         success = await login(email, password);
-        if(email==="admin@1234" && password==="12345678"){
-          success = true;
-        };
       } else {
         if (!name.trim()) {
           setError('Name is required');

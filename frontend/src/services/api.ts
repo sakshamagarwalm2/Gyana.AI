@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:5000/api/v1';
 
 export const api = {
   async login(email: string, password: string) {
-    const response = await axios.post(`${API_URL}/auth/login`, {
+    const response = await axios.post(`${API_URL}/user/login`, {
       email,
       password
     });
@@ -12,7 +12,7 @@ export const api = {
   },
 
   async register(name: string, email: string, password: string) {
-    const response = await axios.post(`${API_URL}/auth/register`, {
+    const response = await axios.post(`${API_URL}/user/signup`, {
       name,
       email,
       password
