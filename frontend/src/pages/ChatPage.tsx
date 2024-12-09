@@ -59,6 +59,7 @@ function ChatPage() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !userId) return;
+    console.log(userId);
 
     const userMessage: Message = {
       id: Date.now(),

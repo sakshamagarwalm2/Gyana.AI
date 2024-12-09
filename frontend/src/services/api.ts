@@ -8,7 +8,7 @@ export const api = {
       email,
       password
     });
-    // console.log(response)
+    console.log(response)
     return response.data;
   },
 
@@ -23,7 +23,7 @@ export const api = {
   },
 
   async sendMessage(userId: string, message: string) {
-    const response = await axios.post(`${API_URL}/chat/send`, {
+    const response = await axios.post(`${API_URL}/chat/new`, {
       userId,
       message
     });
@@ -31,12 +31,12 @@ export const api = {
   },
 
   async getChatHistory(userId: string) {
-    const response = await axios.get(`${API_URL}/chat/history/${userId}`);
+    const response = await axios.get(`${API_URL}/chat/all-chats/${userId}`);
     return response.data;
   },
 
   async clearChatHistory(userId: string) {
-    const response = await axios.delete(`${API_URL}/chat/clear/${userId}`);
+    const response = await axios.delete(`${API_URL}/chat/delete/${userId}`);
     return response.data;
   }
 };

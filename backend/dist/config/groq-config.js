@@ -5,4 +5,4 @@ export const configureGroq = () => {
     });
     return groq;
 };
-//# sourceMappingURL=openai-config.js.map
+//# sourceMappingURL=groq-config.js.map
