@@ -8,10 +8,10 @@ export const generateChatCompletion = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { message } = req.body;
-  console.log(message);
+  const { message, userId } = req.body;
+  console.log(message, userId);
   try {
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findById(userId);
     if (!user)
       return res
         .status(401)
@@ -28,7 +28,7 @@ export const generateChatCompletion = async (
 
     // send all chats with new one to Groq API
     const groq = configureGroq();
-    
+
     // get latest response
     const chatResponse = await groq.chat.completions.create({
       model: "llama3-70b-8192",
@@ -36,11 +36,11 @@ export const generateChatCompletion = async (
     });
 
     const responseMessage = chatResponse.choices[0].message;
-    user.chats.push({ 
-      content: responseMessage.content || '', 
-      role: responseMessage.role 
+    user.chats.push({
+      content: responseMessage.content || '',
+      role: responseMessage.role
     });
-    
+
     await user.save();
     return res.status(200).json({ chats: user.chats });
   } catch (error) {
@@ -54,19 +54,16 @@ export const sendChatsToUser = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { userId } = req.params;
   try {
-    //user token check
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(401).send("User not registered OR Token malfunctioned");
-    }
-    if (user._id.toString() !== res.locals.jwtData.id) {
-      return res.status(401).send("Permissions didn't match");
+      return res.status(401).send("User not registered");
     }
     return res.status(200).json({ message: "OK", chats: user.chats });
   } catch (error) {
     console.log(error);
-    return res.status(200).json({ message: "ERROR", cause: error.message });
+    return res.status(500).json({ message: "ERROR", cause: error.message });
   }
 };
 
@@ -75,14 +72,11 @@ export const deleteChats = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { userId } = req.params;
   try {
-    //user token check
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(401).send("User not registered OR Token malfunctioned");
-    }
-    if (user._id.toString() !== res.locals.jwtData.id) {
-      return res.status(401).send("Permissions didn't match");
+      return res.status(401).send("User not registered");
     }
     //@ts-ignore
     user.chats = [];
@@ -90,6 +84,6 @@ export const deleteChats = async (
     return res.status(200).json({ message: "OK" });
   } catch (error) {
     console.log(error);
-    return res.status(200).json({ message: "ERROR", cause: error.message });
+    return res.status(500).json({ message: "ERROR", cause: error.message });
   }
 };

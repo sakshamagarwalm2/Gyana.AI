@@ -35,9 +35,11 @@ function ChatPage() {
 
   const loadChatHistory = async () => {
     if (!userId) return;
-
+    
     try {
+      // console.log(userId)
       const response = await api.getChatHistory(userId);
+      console.log(response);
       if (response.success) {
         setMessages(response.history.map((msg: any, index: number) => ({
           id: index,
@@ -59,7 +61,7 @@ function ChatPage() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !userId) return;
-    console.log(userId);
+    // console.log(userId);
 
     const userMessage: Message = {
       id: Date.now(),
@@ -74,6 +76,7 @@ function ChatPage() {
 
     try {
       const response = await api.sendMessage(userId, input);
+      console.log(response)
       if (response.success) {
         const aiMessage: Message = {
           id: Date.now() + 1,

@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           name: response.name,
           email: response.email
         });
-        console.log(response.userId, response.name, response.email);
+        // console.log(response.userId, response.name, response.email);
         return true;
       }
       return false;

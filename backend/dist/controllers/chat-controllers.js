@@ -1,10 +1,10 @@
 import User from "../models/User.js";
 import { configureGroq } from "../config/groq-config.js";
 export const generateChatCompletion = async (req, res, next) => {
-    const { message } = req.body;
-    console.log(message);
+    const { message, userId } = req.body;
+    console.log(message, userId);
     try {
-        const user = await User.findById(res.locals.jwtData.id);
+        const user = await User.findById(userId);
         if (!user)
             return res
                 .status(401)
@@ -37,31 +37,25 @@ export const generateChatCompletion = async (req, res, next) => {
     }
 };
 export const sendChatsToUser = async (req, res, next) => {
+    const { userId } = req.params;
     try {
-        //user token check
-        const user = await User.findById(res.locals.jwtData.id);
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(401).send("User not registered OR Token malfunctioned");
-        }
-        if (user._id.toString() !== res.locals.jwtData.id) {
-            return res.status(401).send("Permissions didn't match");
+            return res.status(401).send("User not registered");
         }
         return res.status(200).json({ message: "OK", chats: user.chats });
     }
     catch (error) {
         console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message });
+        return res.status(500).json({ message: "ERROR", cause: error.message });
     }
 };
 export const deleteChats = async (req, res, next) => {
+    const { userId } = req.params;
     try {
-        //user token check
-        const user = await User.findById(res.locals.jwtData.id);
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(401).send("User not registered OR Token malfunctioned");
-        }
-        if (user._id.toString() !== res.locals.jwtData.id) {
-            return res.status(401).send("Permissions didn't match");
+            return res.status(401).send("User not registered");
         }
         //@ts-ignore
         user.chats = [];
@@ -70,7 +64,7 @@ export const deleteChats = async (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message });
+        return res.status(500).json({ message: "ERROR", cause: error.message });
     }
 };
 //# sourceMappingURL=chat-controllers.js.map

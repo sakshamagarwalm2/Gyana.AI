@@ -8,7 +8,7 @@ export const api = {
       email,
       password
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
   },
 
@@ -18,7 +18,7 @@ export const api = {
       email,
       password
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
   },
 
@@ -31,7 +31,10 @@ export const api = {
   },
 
   async getChatHistory(userId: string) {
+    // console.log(userId);
+    console.log(`${API_URL}/chat`);
     const response = await axios.get(`${API_URL}/chat/all-chats/${userId}`);
+    console.log(response)
     return response.data;
   },
 
