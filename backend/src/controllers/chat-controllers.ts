@@ -1,89 +1,76 @@
-import { NextFunction, Request, Response } from "express";
-import User from "../models/User.js";
-import { configureGroq } from "../config/groq-config.js";
-import Groq from 'groq-sdk';
+import { Response } from 'express';
+import { AuthRequest } from '../middelwarea/auth-middleware.js';
+import User from '../models/User.js';
+import { configureGroq } from '../config/groq-config.js';
 
-export const generateChatCompletion = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { message, userId } = req.body;
-  console.log(message, userId);
+export const generateChatCompletion = async (req: AuthRequest, res: Response) => {
   try {
+    const {  userId, message } = req.body;
+    console.log("hit api msg : ",message, userId);
+
     const user = await User.findById(userId);
-    if (!user)
-      return res
-        .status(401)
-        .json({ message: "User not registered OR Token malfunctioned" });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    // grab chats of user
-    const chats = user.chats.map(({ role, content }) => ({
-      role,
-      content,
-    })) as Groq.ChatCompletionMessageParam[];
-
-    chats.push({ content: message, role: "user" });
-    user.chats.push({ content: message, role: "user" });
-
-    // send all chats with new one to Groq API
-    const groq = configureGroq();
-
-    // get latest response
-    const chatResponse = await groq.chat.completions.create({
-      model: "llama3-70b-8192",
-      messages: chats,
-    });
-
-    const responseMessage = chatResponse.choices[0].message;
+    // Add user message to chat history
     user.chats.push({
-      content: responseMessage.content || '',
-      role: responseMessage.role
+      role: 'user',
+      content: message,
+      id: crypto.randomUUID()
     });
+
+    // Get AI response
+    const groq = configureGroq();
+    const chatResponse = await groq.chat.completions.create({
+      model: 'llama3-70b-8192',
+      messages: user.chats.map(({ role, content }) => ({ role, content }))
+    });
+
+    const aiMessage = chatResponse.choices[0].message;
+    if (aiMessage.content) {
+      user.chats.push({
+        role: 'assistant',
+        content: aiMessage.content,
+        id: crypto.randomUUID()
+      });
+    }
 
     await user.save();
-    return res.status(200).json({ chats: user.chats });
+    res.status(200).json({ chats: user.chats });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: 'Error generating response', error });
   }
 };
 
-export const sendChatsToUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { userId } = req.params;
+export const getChatHistory = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.userId;
+    console.log("get his: "+ userId);
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(401).send("User not registered");
+      return res.status(404).json({ message: 'User not found' });
     }
-    return res.status(200).json({ message: "OK", chats: user.chats });
+
+    res.status(200).json({ chats: user.chats });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "ERROR", cause: error.message });
+    res.status(500).json({ message: 'Error fetching chat history', error });
   }
 };
 
-export const deleteChats = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { userId } = req.params;
+export const clearChatHistory = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.userId;
+    console.log("clear his: "+ userId);
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(401).send("User not registered");
+      return res.status(404).json({ message: 'User not found' });
     }
-    //@ts-ignore
+
     user.chats = [];
     await user.save();
-    return res.status(200).json({ message: "OK" });
+    res.status(200).json({ message: 'Chat history cleared' });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "ERROR", cause: error.message });
+    res.status(500).json({ message: 'Error clearing chat history', error });
   }
 };

@@ -18,6 +18,7 @@ interface Message {
 function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  //@ts-ignore
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -34,10 +35,10 @@ function ChatPage() {
   useEffect(scrollToBottom, [messages]);
 
   const loadChatHistory = async () => {
+    console.log("localhist: ",userId)
     if (!userId) return;
     
     try {
-      // console.log(userId)
       const response = await api.getChatHistory(userId);
       console.log(response);
       if (response.success) {
@@ -69,18 +70,24 @@ function ChatPage() {
       sender: 'user'
     };
 
+    console.log(userMessage, userMessage.id, userMessage.text, userMessage.sender);
+
     setMessages(prev => [...prev, userMessage]);
+
     setInput('');
     messageSound.play();
     setIsLoading(true);
 
     try {
+      // console.log(setMessages, userId, input);
       const response = await api.sendMessage(userId, input);
-      console.log(response)
-      if (response.success) {
+      // console.log("chatpg: ",response)
+      // console.log("chatpg: ",response.chats.slice(-1)[0].content)
+
+      if (response) {
         const aiMessage: Message = {
           id: Date.now() + 1,
-          text: response.message,
+          text: response.chats.slice(-1)[0].content,
           sender: 'ai'
         };
         setMessages(prev => [...prev, aiMessage]);

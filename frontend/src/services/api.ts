@@ -23,23 +23,30 @@ export const api = {
   },
 
   async sendMessage(userId: string, message: string) {
+    console.log("api : "+ message, userId);
     const response = await axios.post(`${API_URL}/chat/new`, {
       userId,
       message
     });
+    console.log("api : "+response,response.data)
     return response.data;
   },
 
   async getChatHistory(userId: string) {
     // console.log(userId);
-    console.log(`${API_URL}/chat`);
-    const response = await axios.get(`${API_URL}/chat/all-chats/${userId}`);
+    console.log("chathistory api : "+userId);
+
+    const response = await axios.get(`${API_URL}/chat/allchats`);
+
     console.log(response)
+
     return response.data;
   },
 
   async clearChatHistory(userId: string) {
-    const response = await axios.delete(`${API_URL}/chat/delete/${userId}`);
+    console.log("delete api : "+userId)
+    const response = await axios.delete(`${API_URL}/chat/delete`);
+    console.log("delete api : "+response,response.data)
     return response.data;
   }
 };
