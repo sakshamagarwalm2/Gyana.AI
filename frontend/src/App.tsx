@@ -43,7 +43,7 @@ function App() {
 
   return (
     <Router>
-      <div className="overflow-hidden min-h-screen bg-black" style={{
+      <div className="overflow-hidden relative min-h-screen bg-black" style={{
         backgroundImage: `url(${BG_IMG})`, backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat'
       }}>

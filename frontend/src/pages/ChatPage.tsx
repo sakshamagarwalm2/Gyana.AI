@@ -35,18 +35,23 @@ function ChatPage() {
   useEffect(scrollToBottom, [messages]);
 
   const loadChatHistory = async () => {
-    console.log("localhist: ",userId)
     if (!userId) return;
-    
+  
     try {
       const response = await api.getChatHistory(userId);
-      console.log(response);
-      if (response.success) {
-        setMessages(response.history.map((msg: any, index: number) => ({
+      
+      if (response.chats && response.chats.length > 0) {
+        // Map through all chats in response.chats
+        const historicalMessages: Message[] = response.chats.map((chat: any, index: number) => ({
           id: index,
-          text: msg.text,
-          sender: msg.sender
-        })));
+          text: chat.content, // Assuming the chat object has a 'content' field
+          sender: chat.sender || (index % 2 === 0 ? 'user' : 'ai') // Fallback sender logic if not specified
+        }));
+  
+        setMessages(historicalMessages);
+      } else {
+        // Handle case where no chat history exists
+        setMessages([]);
       }
     } catch (error) {
       errorSound.play();
@@ -62,7 +67,6 @@ function ChatPage() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !userId) return;
-    // console.log(userId);
 
     const userMessage: Message = {
       id: Date.now(),
@@ -70,7 +74,7 @@ function ChatPage() {
       sender: 'user'
     };
 
-    console.log(userMessage, userMessage.id, userMessage.text, userMessage.sender);
+    // console.log(userMessage, userMessage.id, userMessage.text, userMessage.sender);
 
     setMessages(prev => [...prev, userMessage]);
 
@@ -110,10 +114,9 @@ function ChatPage() {
 
   const handleClear = async () => {
     if (!userId) return;
-
     try {
       const response = await api.clearChatHistory(userId);
-      if (response.success) {
+      if (response) {
         setMessages([]);
         messageSound.play();
       } else {
@@ -136,11 +139,11 @@ function ChatPage() {
   };
     
   return (
-    <div className="flex relative z-30 flex-col p-5 min-h-screen md:p-10 bg-black/20">
+    <div className="flex relative z-30 flex-col min-h-screen md:p-10 bg-black/20">
       {/* Header */}
       <div 
         data-augmented-ui="tl-clip br-clip both"
-        className="flex justify-between items-center p-4 border-cyan-500 bg-black/80"
+        className="flex justify-between items-center p-4 border-cyan-500 bg-black/80 "
       >
         <h1 className="text-xl text-cyan-500">Gyana.AI</h1>
         <div className="flex space-x-4">

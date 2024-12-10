@@ -18,7 +18,13 @@ export const generateChatCompletion = async (req, res) => {
         const groq = configureGroq();
         const chatResponse = await groq.chat.completions.create({
             model: 'llama3-70b-8192',
-            messages: user.chats.map(({ role, content }) => ({ role, content }))
+            messages: [
+                {
+                    role: 'system',
+                    content: 'You are a helpful Ai assistant named Gyana.Ai based on llama3-70b model. Always respond in a clear and concise manner.'
+                },
+                ...user.chats.map(({ role, content }) => ({ role, content }))
+            ]
         });
         const aiMessage = chatResponse.choices[0].message;
         if (aiMessage.content) {
@@ -37,7 +43,7 @@ export const generateChatCompletion = async (req, res) => {
 };
 export const getChatHistory = async (req, res) => {
     try {
-        const userId = req.userId;
+        const { userId } = req.body;
         console.log("get his: " + userId);
         const user = await User.findById(userId);
         if (!user) {
@@ -51,8 +57,8 @@ export const getChatHistory = async (req, res) => {
 };
 export const clearChatHistory = async (req, res) => {
     try {
-        const userId = req.userId;
-        console.log("clear his: " + userId);
+        const { userId } = req.body;
+        console.log("delete his: " + userId);
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });

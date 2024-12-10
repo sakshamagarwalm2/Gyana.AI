@@ -4,7 +4,7 @@ import { generateChatCompletion, getChatHistory, clearChatHistory, } from "../co
 //Protected API
 const router = Router();
 router.post("/new", validate(chatCompletionValidator), generateChatCompletion);
-router.get("/allchats", getChatHistory);
-router.delete("/delete", clearChatHistory);
+router.post("/allchats", getChatHistory);
+router.post("/delete", clearChatHistory);
 export default router;
 //# sourceMappingURL=chat-routes.js.map

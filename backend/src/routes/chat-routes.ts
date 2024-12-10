@@ -14,8 +14,8 @@ router.post(
   validate(chatCompletionValidator),
   generateChatCompletion
 );
-router.get("/allchats",  getChatHistory);
-router.delete("/delete",  clearChatHistory);
+router.post("/allchats",  getChatHistory);
+router.post("/delete",  clearChatHistory);
 
 
 export default router;
