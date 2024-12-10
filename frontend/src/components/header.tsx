@@ -11,7 +11,7 @@ function Header() {
     return (
         <div
             data-augmented-ui="tl-clip br-clip both"
-            className="flex overflow-hidden absolute top-0 z-50 justify-between items-center p-4 mt-5 w-full border-cyan-500 top bg-black/80"
+            className="flex overflow-hidden fixed top-0 z-50 justify-between items-center p-4 mt-5 w-full border-cyan-500 top bg-black/80"
         >
             <div className="flex items-center" onMouseEnter={() => hoverSound.play()}>
                 {/* Replace with your logo */}
