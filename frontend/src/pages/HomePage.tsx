@@ -91,7 +91,7 @@ function HomePage() {
             </div>
             <div className="space-x-4">
               <a
-                href="https://mylook-saksham.vercel.app/"
+                href="https://github.com/sakshamagarwalm2/Gyana.AI"
                 target="_blank"
                 onMouseEnter={() => hoverSound.play()}
                 data-augmented-ui="tl-clip br-clip both"
