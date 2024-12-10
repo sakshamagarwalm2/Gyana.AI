@@ -14,14 +14,17 @@ import LoginPage from "./pages/LoginPage";
 import ChatPage from "./pages/ChatPage";
 import { useAuthStore } from "./stores/authStore";
 import BG_IMG from "./public/pixelcut-export.png";
+import clsound from './public/mixkit-sci-fi-click-900.wav';
+import hvsound from './public/mixkit-sci-fi-confirmation-914.wav';
+import entsound from './public/mixkit-apocalyptic-stomp-impact-3057.wav';
 
 // import Header from './components/header';
 
 // UI Sound Effects
 const uiSounds = {
-  hover: new Howl({ src: ["https://assets.codepen.io/154874/hover.mp3"] }),
-  click: new Howl({ src: ["https://assets.codepen.io/154874/click.mp3"] }),
-  startup: new Howl({ src: ["https://assets.codepen.io/154874/startup.mp3"] }),
+  hover: new Howl({ src: [hvsound] }),
+  click: new Howl({ src: [clsound] }),
+  startup: new Howl({ src: [entsound] }),
 };
 
 function App() {
@@ -62,7 +65,7 @@ function App() {
           <GridLines
             lineColor="rgba(0, 255, 255, 0.1)"
             lineWidth={2}
-            className="fixed z-10"
+            className="fixed"
           />
         </div>
 

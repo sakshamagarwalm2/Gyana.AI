@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import GLOBE from 'vanta/dist/vanta.globe.min'; 
 import { Howl } from 'howler';  
 import Header from '../components/header';
+import clsound from '../public/mixkit-sci-fi-click-900.wav';
 
-const hoverSound = new Howl({ src: ['https://assets.codepen.io/154874/hover.mp3'] });  
+
+const hoverSound = new Howl({ src: [clsound] });  
 
 function HomePage() {   
   const vantaRef = useRef<HTMLDivElement>(null);   
@@ -42,7 +44,7 @@ function HomePage() {
       />
       
       {/* Content Overlay */}
-      <div className="flex relative z-30 flex-col justify-center items-center w-full h-full"> 
+      <div className="flex  z-50 flex-col justify-center items-center w-full h-full"> 
         <div          
           data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"         
           className="p-5 m-5 text-center border-cyan-500 md:p-12 bg-black/80"       
@@ -54,7 +56,7 @@ function HomePage() {
               to="/login"             
               onMouseEnter={() => hoverSound.play()}             
               data-augmented-ui="tl-clip br-clip both"             
-              className="inline-block px-8 py-3 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"           
+              className="inline-block font-semibold px-8 py-3 text-cyan-500 transition-colors bg-cyan-500/20 hover:bg-cyan-500/30"           
             >
               ACCESS TERMINAL AI_
             </Link>

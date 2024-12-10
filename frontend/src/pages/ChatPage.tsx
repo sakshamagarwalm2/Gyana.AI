@@ -6,17 +6,32 @@ import { Trash2, Send, LogOut } from 'lucide-react';
 import { api } from '../services/api';
 import { DEFAULT_MESSAGES, getErrorMessage } from '../utils/errorMessages';
 import logo from '../public/logo.png';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import clsound from '../public/mixkit-sci-fi-click-900.wav';
+import hvsound from '../public/mixkit-sci-fi-confirmation-914.wav';
 
-const messageSound = new Howl({ src: ['https://assets.codepen.io/154874/message.mp3'] });
-const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'] });
+const messageSound = new Howl({ src: [clsound] });
+const errorSound = new Howl({ src: [hvsound] });
 
 interface Message {
   id: number;
   text: string;
-  sender: 'user' | 'ai';
+  sender: 'user' | 'ai' | 'system';
+  systemType?: 'error' | 'info' | 'warning';
 }
 
-function ChatPage() {
+interface ChatPageProps {
+  systemMessageFormatter?: (message: string, type?: 'error' | 'info' | 'warning') => string;
+}
+
+function ChatPage({ 
+  systemMessageFormatter = (msg, type) => {
+    // Default system message formatter
+    const prefix = type ? `[${type.toUpperCase()}] ` : '';
+    return `${prefix}${msg}`;
+  }
+}: ChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   //@ts-ignore
@@ -42,24 +57,23 @@ function ChatPage() {
       const response = await api.getChatHistory(userId);
       
       if (response.chats && response.chats.length > 0) {
-        // Map through all chats in response.chats
         const historicalMessages: Message[] = response.chats.map((chat: any, index: number) => ({
           id: index,
-          text: chat.content, // Assuming the chat object has a 'content' field
-          sender: chat.sender || (index % 2 === 0 ? 'user' : 'ai') // Fallback sender logic if not specified
+          text: chat.content,
+          sender: chat.sender || (index % 2 === 0 ? 'user' : 'ai')
         }));
   
         setMessages(historicalMessages);
       } else {
-        // Handle case where no chat history exists
         setMessages([]);
       }
     } catch (error) {
       errorSound.play();
       const userMessage: Message = {
         id: Date.now(),
-        text: DEFAULT_MESSAGES.CHAT_HISTORY_ERROR,
-        sender: 'ai'
+        text: systemMessageFormatter(DEFAULT_MESSAGES.CHAT_HISTORY_ERROR, 'error'),
+        sender: 'system',
+        systemType: 'error'
       };
       setMessages([userMessage]);
     }
@@ -75,8 +89,6 @@ function ChatPage() {
       sender: 'user'
     };
 
-    // console.log(userMessage, userMessage.id, userMessage.text, userMessage.sender);
-
     setMessages(prev => [...prev, userMessage]);
 
     setInput('');
@@ -84,10 +96,7 @@ function ChatPage() {
     setIsLoading(true);
 
     try {
-      // console.log(setMessages, userId, input);
       const response = await api.sendMessage(userId, input);
-      // console.log("chatpg: ",response)
-      // console.log("chatpg: ",response.chats.slice(-1)[0].content)
 
       if (response) {
         const aiMessage: Message = {
@@ -104,8 +113,9 @@ function ChatPage() {
       errorSound.play();
       const errorMessage: Message = {
         id: Date.now() + 1,
-        text: getErrorMessage(error),
-        sender: 'ai'
+        text: systemMessageFormatter(getErrorMessage(error), 'error'),
+        sender: 'system',
+        systemType: 'error'
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -127,8 +137,9 @@ function ChatPage() {
       errorSound.play();
       const errorMessage: Message = {
         id: Date.now(),
-        text: getErrorMessage(error),
-        sender: 'ai'
+        text: systemMessageFormatter(getErrorMessage(error), 'error'),
+        sender: 'system',
+        systemType: 'error'
       };
       setMessages([errorMessage]);
     }
@@ -138,9 +149,62 @@ function ChatPage() {
     logout();
     navigate('/');
   };
+
+  const renderMessageContent = (message: Message) => {
+    // Render different styles based on sender
+    switch (message.sender) {
+      case 'user':
+        return message.text;
+      case 'ai':
+        return (
+          <ReactMarkdown 
+            remarkPlugins={[remarkGfm]}
+            components={{
+              // Custom styling for different markdown elements
+              strong: ({node, ...props}) => (
+                <strong className="font-bold text-purple-300" {...props} />
+              ),
+              em: ({node, ...props}) => (
+                <em className="italic text-purple-200" {...props} />
+              ),
+              h1: ({node, ...props}) => (
+                <h1 className="text-xl font-bold text-purple-400 mb-2" {...props} />
+              ),
+              h2: ({node, ...props}) => (
+                <h2 className="text-lg font-semibold text-purple-300 mb-1" {...props} />
+              ),
+              code: ({node, ...props}) => (
+                <code className="bg-purple-800/30 text-purple-200 p-1 rounded" {...props} />
+              ),
+              ul: ({node, ...props}) => (
+                <ul className="list-disc pl-5 mb-2" {...props} />
+              ),
+              ol: ({node, ...props}) => (
+                <ol className="list-decimal pl-5 mb-2" {...props} />
+              )
+            }}
+          >
+            {message.text}
+          </ReactMarkdown>
+        );
+      case 'system':
+        return (
+          <div 
+            className={`
+              ${message.systemType === 'error' ? 'text-red-400' : 
+                message.systemType === 'warning' ? 'text-yellow-400' : 'text-cyan-400'}
+            `}
+          >
+            {message.text}
+          </div>
+        );
+      default:
+        return message.text;
+    }
+  };
     
   return (
-    <div className="flex z-30 flex-col min-h-screen md:p-10 bg-black/20">
+    <div className="flex z-30 flex-col min-h-screen md:p-10 bg-black/90">
       {/* Header */}
       <div
         data-augmented-ui="tl-clip br-clip both"
@@ -174,17 +238,23 @@ function ChatPage() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              message.sender === 'user' ? 'justify-end' : 
+              message.sender === 'system' ? 'justify-center' : 
+              'justify-start'
+            }`}
           >
             <div
               data-augmented-ui="tl-clip br-clip both"
               className={`max-w-[80%] p-3 ${
                 message.sender === 'user'
-                  ? 'bg-cyan-700/20 text-cyan-500'
-                  : 'bg-purple-700/20 text-purple-500'
+                  ? 'bg-cyan-700/20 text-cyan-400 font-semibold' :
+                message.sender === 'system'
+                  ? 'bg-gray-700/20 text-gray-500 ' :
+                  'bg-purple-700/20 text-purple-500 font-semibold'
               }`}
             >
-              {message.text}
+              {renderMessageContent(message)}
             </div>
           </div>
         ))}

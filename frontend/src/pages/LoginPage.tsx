@@ -4,9 +4,12 @@ import { useRive } from '@rive-app/react-canvas';
 import { Howl } from 'howler';
 import { useAuthStore } from '../stores/authStore';
 import { Mail, Lock, User, Loader } from 'lucide-react';
+import Header from '../components/header';
+import clsound from '../public/mixkit-sci-fi-click-900.wav';
+import hvsound from '../public/mixkit-sci-fi-confirmation-914.wav';
 
-const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'] });
-const successSound = new Howl({ src: ['https://assets.codepen.io/154874/success.mp3'] });
+const errorSound = new Howl({ src: [clsound] });
+const successSound = new Howl({ src: [hvsound] });
 
 function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -59,9 +62,10 @@ function LoginPage() {
 
   return (
     <div className="absolute z-40 min-h-screen w-full flex items-center justify-center bg-black/20">
+      <Header/>
       <div 
         data-augmented-ui="tl-clip tr-clip br-clip bl-clip both"
-        className="w-96 p-8 bg-black/80 border-cyan-500"
+        className="w-64 md:w-96 p-5 md:p-8 mt-16 bg-black/80 border-cyan-500"
       >
         <div className="h-32 mb-8">
           <RiveComponent />
