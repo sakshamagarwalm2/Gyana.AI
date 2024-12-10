@@ -137,6 +137,7 @@ function LoginPage() {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
+              onMouseEnter={() => errorSound.play()}
               className="text-cyan-500 hover:text-cyan-400 text-sm"
             >
               {isLogin ? 'Need access? Register here' : 'Already registered? Login here'}

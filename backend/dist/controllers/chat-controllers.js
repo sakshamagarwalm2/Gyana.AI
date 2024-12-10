@@ -21,7 +21,7 @@ export const generateChatCompletion = async (req, res) => {
             messages: [
                 {
                     role: 'system',
-                    content: 'You are a helpful Ai assistant named Gyana.Ai based on llama3-70b model. Always respond in a clear and concise manner.'
+                    content: 'You are a helpful Ai assistant named Gyana.Ai based on llama3-70b model created by saksham agarwal and all rights reserved for HKRM. Always respond in a clear and concise manner.'
                 },
                 ...user.chats.map(({ role, content }) => ({ role, content }))
             ]
