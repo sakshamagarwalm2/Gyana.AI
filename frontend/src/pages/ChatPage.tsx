@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/authStore';
 import { Trash2, Send, LogOut } from 'lucide-react';
 import { api } from '../services/api';
 import { DEFAULT_MESSAGES, getErrorMessage } from '../utils/errorMessages';
+import logo from '../public/logo.png';
 
 const messageSound = new Howl({ src: ['https://assets.codepen.io/154874/message.mp3'] });
 const errorSound = new Howl({ src: ['https://assets.codepen.io/154874/error.mp3'] });
@@ -139,13 +140,17 @@ function ChatPage() {
   };
     
   return (
-    <div className="flex relative z-30 flex-col min-h-screen md:p-10 bg-black/20">
+    <div className="flex z-30 flex-col min-h-screen md:p-10 bg-black/20">
       {/* Header */}
-      <div 
+      <div
         data-augmented-ui="tl-clip br-clip both"
-        className="flex justify-between items-center p-4 border-cyan-500 bg-black/80 "
+        className="fixed top-0 left-0 right-0 z-20 flex justify-between items-center p-4 border-cyan-500 bg-black/80"
       >
-        <h1 className="text-xl text-cyan-500">Gyana.AI</h1>
+        <div className='flex gap-2'>
+        <img src={logo} alt="Your Logo" className="mr-2 w-8 h-8" />
+        <h1 className="text-xl font-extrabold text-cyan-500">Gyana.AI</h1>
+
+        </div>
         <div className="flex space-x-4">
           <button
             onClick={handleClear}
@@ -165,7 +170,7 @@ function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div className="overflow-y-auto flex-1 p-4 space-y-4">
+      <div className="overflow-y-auto flex-1 p-4 space-y-4 mt-16">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -175,8 +180,8 @@ function ChatPage() {
               data-augmented-ui="tl-clip br-clip both"
               className={`max-w-[80%] p-3 ${
                 message.sender === 'user'
-                  ? 'bg-cyan-500/20 text-cyan-500'
-                  : 'bg-purple-500/20 text-purple-500'
+                  ? 'bg-cyan-700/20 text-cyan-500'
+                  : 'bg-purple-700/20 text-purple-500'
               }`}
             >
               {message.text}
