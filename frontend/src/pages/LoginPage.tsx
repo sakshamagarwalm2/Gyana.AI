@@ -108,7 +108,7 @@ function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="PASSWORD"
+                placeholder="PASSWORD (MIN 8 Char)"
                 className="w-full bg-black/50 border-cyan-500 text-cyan-500 p-2 pl-10"
                 data-augmented-ui="tl-clip br-clip both"
               />
