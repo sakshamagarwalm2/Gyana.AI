@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     // Play startup sound
-    uiSounds.startup.play();
+    uiSounds.hover.play();
 
     // Simulate loading
     setTimeout(() => setIsLoading(false), 2000);
