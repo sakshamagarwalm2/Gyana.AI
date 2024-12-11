@@ -1,6 +1,6 @@
 # Gyana.AI - Advanced AI Communication Platform
 
-![Gyana.AI Banner]([https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1932&auto=format&fit=crop](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/home.png))
+![Gyana.AI Banner](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/home.png)
 
 ## 🤖 Overview
 
@@ -110,10 +110,10 @@ gyana-ai/
 
 ## 🖼️ Screenshots
 
-![LoginSignup Page]([https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/login.png))
+![LoginSignup Page](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/login.png)
 *Landing page with cyberpunk theme*
 
-![Chat Interface]([https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2070&auto=format&fit=crop](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/chat.png))
+![Chat Interface](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/chat.png)
 *AI chat interface with 3D background*
 
 ## 🔐 Security
