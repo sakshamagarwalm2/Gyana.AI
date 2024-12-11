@@ -2,6 +2,8 @@
 
 ![Gyana.AI Banner](https://github.com/sakshamagarwalm2/Gyana.AI/blob/main/Public/home.png)
 
+Deployed on [Vercel](https://gyana-ai.vercel.app/)
+
 ## 🤖 Overview
 
 Gyana.AI is a sophisticated AI communication platform built on the LLaMA 70B model using the Groq API. This project combines cutting-edge AI technology with a cyberpunk-inspired user interface to create an engaging and powerful conversational AI experience.
